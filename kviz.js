@@ -105,4 +105,27 @@ function klikNaOdpoved() {
 function zobrazVyhodnoceni() {
     kviz.style.display = 'none';
     vysledek.style.display = 'block';
+
+    for (let a = 0; a < otazky.length; a++) {
+        const hodnoceniOtazky = document.createElement('div');
+        hodnoceniOtazky.classList.add('hodnoceni-otazky');
+
+        const shrnutiOtazky = document.createElement('h3');
+        shrnutiOtazky.classList.add('shrnuti-otazky');
+        shrnutiOtazky.textContent = otazky[a].index + '. ' + otazky[a].otazka;
+
+        const tvojeOdpoved = document.createElement('p');
+        tvojeOdpoved.classList.add('tvoje-odpoved');
+        tvojeOdpoved.textContent = 'Tvoje odpověď:';
+
+        const vyhodnoceniOtazky = document.createElement('p');
+        vyhodnoceniOtazky.classList.add('vyhodnoceni-otazky');
+        vyhodnoceniOtazky.textContent = 'Správná odpověď:';
+
+        hodnoceniOtazky.appendChild(shrnutiOtazky);
+        hodnoceniOtazky.appendChild(tvojeOdpoved);
+        hodnoceniOtazky.appendChild(vyhodnoceniOtazky);
+
+        hodnoceni.appendChild(hodnoceniOtazky);
+    }
 }
