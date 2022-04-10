@@ -13,69 +13,96 @@ const otazky = [
         otazka: 'Jaké je Matějovo nejoblíbenější ovoce?',
         foto: 'obrazky/ovoce.jpg',
         odpovedi: ['Kokos ', 'Melounek', 'Jahoda', 'Ani jedna z možností'],
-        index: 1
+        index: 2
     }, {
         poradi: 'Otázka 3 / 3',
         otazka: 'Pro úspěšné absolvování kurzu je potřeba?',
         foto: 'obrazky/pivo.jpg',
         odpovedi: ['Umět JavaScript', 'Chodit po kurzu do hospody'],
-        index: 0
-    },
+        index: 3
+    }
 ];
 
 // Dále budeš potřebovat další proměnné - jaké?
-for (let i = 2; i < 3; i++) {
-    let poradi = document.getElementById('poradi');
+let poradi = document.getElementById('poradi');
+let otazka = document.getElementById('otazka');
+let obrazek = document.getElementById('obrazek');
+let odpovedi = document.createElement('ul');
+let prvniMoznost = document.createElement('li');
+let druhaMoznost = document.createElement('li');
+let tretiMoznost = document.createElement('li');
+let ctvrtaMoznost = document.createElement('li');
+let i = 0;
+let kviz = document.querySelector('.kviz');
+let hodnoceni = document.getElementById('hodnoceni');
+let vysledek = document.querySelector('.vysledek');
+let vysledekPrvniOtazka = document.createElement('h3');
+let vysledekDruhaOtazka = document.createElement('h3');
+let vysledekTretiOtazka = document.createElement('h3');
+let a = 0;
+
+odpovedi.setAttribute('id', 'odpovedi');
+
+prvniMoznost.dataset.odpoved = 0;
+druhaMoznost.dataset.odpoved = 1;
+tretiMoznost.dataset.odpoved = 2;
+ctvrtaMoznost.dataset.odpoved = 3;
+
+// Tato funkce se postará o vygenerování otázky
+// Zavoláme ji jednou na začátku a poté vždy po odpovězení
+function zobrazOtazku() {
+
     poradi.textContent = otazky[i].poradi;
-
-    let otazka = document.getElementById('otazka');
     otazka.textContent = otazky[i].otazka;
-
-    let obrazek = document.createElement('img');
-    obrazek.setAttribute('id', 'obrazek');
     obrazek.src = otazky[i].foto;
-    obrazek.alt = 'Ilustrační obrázek';
 
-    let foto = document.querySelector('.foto');
-    foto.appendChild(obrazek);
-
-    let odpovedi = document.createElement('ul');
-    odpovedi.setAttribute('id', 'odpovedi');
-
-    let prvniMoznost = document.createElement('li');
-    prvniMoznost.dataset.odpoved = 0;
     prvniMoznost.textContent = otazky[i].odpovedi[0];
-
-    let druhaMoznost = document.createElement('li');
-    druhaMoznost.dataset.odpoved = 1;
     druhaMoznost.textContent = otazky[i].odpovedi[1];
-
-    let tretiMoznost = document.createElement('li');
-    tretiMoznost.dataset.odpoved = 2;
     tretiMoznost.textContent = otazky[i].odpovedi[2];
-
-    let ctvrtaMoznost = document.createElement('li');
-    ctvrtaMoznost.dataset.odpoved = 3;
     ctvrtaMoznost.textContent = otazky[i].odpovedi[3];
 
-    odpovedi.appendChild(prvniMoznost);
-    odpovedi.appendChild(druhaMoznost);
-    odpovedi.appendChild(tretiMoznost);
-    odpovedi.appendChild(ctvrtaMoznost);
+    prvniMoznost.onclick = klikNaOdpoved;
+    druhaMoznost.onclick = klikNaOdpoved;
+    tretiMoznost.onclick = klikNaOdpoved;
+    ctvrtaMoznost.onclick = klikNaOdpoved;
+
+    if (otazky[i].odpovedi.length === 2) {
+        odpovedi.appendChild(prvniMoznost);
+        odpovedi.appendChild(druhaMoznost);
+    }
+    if (otazky[i].odpovedi.length === 3) {
+        odpovedi.appendChild(prvniMoznost);
+        odpovedi.appendChild(druhaMoznost);
+        odpovedi.appendChild(tretiMoznost);
+    }
+    if (otazky[i].odpovedi.length === 4) {
+        odpovedi.appendChild(prvniMoznost);
+        odpovedi.appendChild(druhaMoznost);
+        odpovedi.appendChild(tretiMoznost);
+        odpovedi.appendChild(ctvrtaMoznost);
+    }
 
     let moznosti = document.querySelector('#moznosti');
     moznosti.appendChild(odpovedi);
 }
 
-// Tato funkce se postará o vygenerování otázky
-// Zavoláme ji jednou na začátku a poté vždy po odpovězení
-function zobrazOtazku() { }
+zobrazOtazku();
 
 // Funkce se postará o obsluhu kliknutí na odpověď
 // Musíme ji navázat na kokrétní odpovědi každé otázky (to uděláme v rámci funkce zobrazOtazku())
-function klikNaOdpoved() { }
+function klikNaOdpoved() {
+    if (i < otazky.length - 1) {
+        i++
+        zobrazOtazku();
+    } else {
+        zobrazVyhodnoceni();
+    }
+}
 
 // Když už mám odpovězeno na vše (řídí se velikosí objektu otazky na řádku 3), tak mohu zobrazi výsledky
 // Vypočítám skóre a nageneruje nové elementy do HTML
 // Touto funkcí končí můj program (budu se rozhodovat, zda ji zavolat v rámci klikNaOdpoved())
-function zobrazVyhodnoceni() { }
+function zobrazVyhodnoceni() {
+    kviz.style.display = 'none';
+    vysledek.style.display = 'block';
+}
