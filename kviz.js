@@ -48,6 +48,8 @@ druhaMoznost.dataset.odpoved = 1;
 tretiMoznost.dataset.odpoved = 2;
 ctvrtaMoznost.dataset.odpoved = 3;
 
+
+
 // Tato funkce se postará o vygenerování otázky
 // Zavoláme ji jednou na začátku a poté vždy po odpovězení
 function zobrazOtazku() {
@@ -116,7 +118,7 @@ function zobrazVyhodnoceni() {
 
         const tvojeOdpoved = document.createElement('p');
         tvojeOdpoved.classList.add('tvoje-odpoved');
-        tvojeOdpoved.textContent = 'Tvoje odpověď:';
+        tvojeOdpoved.textContent = 'Tvoje odpověď: ' + otazky[a].odpovedi[tvojeOdpovedi[a]];
 
         const vyhodnoceniOtazky = document.createElement('p');
         vyhodnoceniOtazky.classList.add('vyhodnoceni-otazky');
@@ -128,4 +130,26 @@ function zobrazVyhodnoceni() {
 
         hodnoceni.appendChild(hodnoceniOtazky);
     }
+
 }
+
+let tvojeOdpovedi = [];
+console.log(tvojeOdpovedi);
+
+let moznosti = document.querySelectorAll('li');
+
+moznosti.forEach((moznost) => {
+    moznost.addEventListener('click', pridejDoPole);
+});
+
+function pridejDoPole(udalost) {
+    let moznost = udalost.target;
+
+    let indexOdpovedi = moznost.dataset.odpoved;
+    console.log(indexOdpovedi);
+
+    tvojeOdpovedi.push(indexOdpovedi);
+
+    console.log(tvojeOdpovedi);
+}
+
