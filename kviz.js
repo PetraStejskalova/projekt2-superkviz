@@ -23,6 +23,8 @@ const otazky = [
     }
 ];
 
+const spravneOdpovedi = ['Mončičák', 'Jahoda', 'Umět JavaScript'];
+
 // Dále budeš potřebovat další proměnné - jaké?
 let poradi = document.getElementById('poradi');
 let otazka = document.getElementById('otazka');
@@ -122,7 +124,15 @@ function zobrazVyhodnoceni() {
 
         const vyhodnoceniOtazky = document.createElement('p');
         vyhodnoceniOtazky.classList.add('vyhodnoceni-otazky');
-        vyhodnoceniOtazky.textContent = 'Správná odpověď:';
+
+        console.log(otazky[a].odpovedi[tvojeOdpovedi[a]]);
+        console.log(spravneOdpovedi[a]);
+
+        if (otazky[a].odpovedi[tvojeOdpovedi[a]] === spravneOdpovedi[a]) {
+            vyhodnoceniOtazky.textContent = 'To je SPRÁVNĚ';
+        } else {
+            vyhodnoceniOtazky.textContent = 'Správná odpověď: ' + spravneOdpovedi[a];
+        }
 
         hodnoceniOtazky.appendChild(shrnutiOtazky);
         hodnoceniOtazky.appendChild(tvojeOdpoved);
