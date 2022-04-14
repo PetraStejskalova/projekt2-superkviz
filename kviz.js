@@ -38,9 +38,6 @@ let i = 0;
 let kviz = document.querySelector('.kviz');
 let hodnoceni = document.getElementById('hodnoceni');
 let vysledek = document.querySelector('.vysledek');
-let vysledekPrvniOtazka = document.createElement('h3');
-let vysledekDruhaOtazka = document.createElement('h3');
-let vysledekTretiOtazka = document.createElement('h3');
 let a = 0;
 
 odpovedi.setAttribute('id', 'odpovedi');
@@ -50,10 +47,14 @@ druhaMoznost.dataset.odpoved = 1;
 tretiMoznost.dataset.odpoved = 2;
 ctvrtaMoznost.dataset.odpoved = 3;
 
+let tvojeOdpovedi = [];
+console.log(tvojeOdpovedi);
 
+let spravne = 0;
 
 // Tato funkce se postará o vygenerování otázky
 // Zavoláme ji jednou na začátku a poté vždy po odpovězení
+
 function zobrazOtazku() {
 
     poradi.textContent = otazky[i].poradi;
@@ -70,27 +71,47 @@ function zobrazOtazku() {
     tretiMoznost.onclick = klikNaOdpoved;
     ctvrtaMoznost.onclick = klikNaOdpoved;
 
-    if (otazky[i].odpovedi.length === 2) {
-        odpovedi.appendChild(prvniMoznost);
-        odpovedi.appendChild(druhaMoznost);
-    }
-    if (otazky[i].odpovedi.length === 3) {
-        odpovedi.appendChild(prvniMoznost);
-        odpovedi.appendChild(druhaMoznost);
-        odpovedi.appendChild(tretiMoznost);
-    }
+    console.log(i);
+    console.log(otazky[i].odpovedi.length);
+
     if (otazky[i].odpovedi.length === 4) {
         odpovedi.appendChild(prvniMoznost);
         odpovedi.appendChild(druhaMoznost);
         odpovedi.appendChild(tretiMoznost);
         odpovedi.appendChild(ctvrtaMoznost);
     }
+    if (otazky[i].odpovedi.length === 3) {
+        odpovedi.appendChild(prvniMoznost);
+        odpovedi.appendChild(druhaMoznost);
+        odpovedi.appendChild(tretiMoznost);
+    }
+    if (otazky[i].odpovedi.length < 3) {
+        odpovedi.appendChild(prvniMoznost);
+        odpovedi.appendChild(druhaMoznost);
+        odpovedi.removeChild(tretiMoznost);
+        odpovedi.removeChild(ctvrtaMoznost);
+    }
 
-    let moznosti = document.querySelector('#moznosti');
-    moznosti.appendChild(odpovedi);
+    let mozneOdpovedi = document.querySelectorAll('li');
+
+    mozneOdpovedi.forEach((moznost) => {
+        moznost.addEventListener('click', pridejDoPole);
+    });
+
+    function pridejDoPole(udalost) {
+        let moznost = udalost.target;
+
+        let indexOdpovedi = moznost.dataset.odpoved;
+
+        tvojeOdpovedi.push(indexOdpovedi);
+
+        console.log(tvojeOdpovedi);
+    }
 }
 
-zobrazOtazku();
+function onLoad() {
+    zobrazOtazku();
+}
 
 // Funkce se postará o obsluhu kliknutí na odpověď
 // Musíme ji navázat na kokrétní odpovědi každé otázky (to uděláme v rámci funkce zobrazOtazku())
@@ -102,6 +123,9 @@ function klikNaOdpoved() {
         zobrazVyhodnoceni();
     }
 }
+
+let moznosti = document.querySelector('#moznosti');
+moznosti.appendChild(odpovedi);
 
 // Když už mám odpovězeno na vše (řídí se velikosí objektu otazky na řádku 3), tak mohu zobrazi výsledky
 // Vypočítám skóre a nageneruje nové elementy do HTML
@@ -125,11 +149,9 @@ function zobrazVyhodnoceni() {
         const vyhodnoceniOtazky = document.createElement('p');
         vyhodnoceniOtazky.classList.add('vyhodnoceni-otazky');
 
-        console.log(otazky[a].odpovedi[tvojeOdpovedi[a]]);
-        console.log(spravneOdpovedi[a]);
-
         if (otazky[a].odpovedi[tvojeOdpovedi[a]] === spravneOdpovedi[a]) {
             vyhodnoceniOtazky.textContent = 'To je SPRÁVNĚ';
+            spravne++;
         } else {
             vyhodnoceniOtazky.textContent = 'Správná odpověď: ' + spravneOdpovedi[a];
         }
@@ -141,25 +163,12 @@ function zobrazVyhodnoceni() {
         hodnoceni.appendChild(hodnoceniOtazky);
     }
 
+    zaverecneHodnoceni();
 }
 
-let tvojeOdpovedi = [];
-console.log(tvojeOdpovedi);
+function zaverecneHodnoceni() {
+    let procenta = Math.floor((spravne * 100) / otazky.length);
 
-let moznosti = document.querySelectorAll('li');
-
-moznosti.forEach((moznost) => {
-    moznost.addEventListener('click', pridejDoPole);
-});
-
-function pridejDoPole(udalost) {
-    let moznost = udalost.target;
-
-    let indexOdpovedi = moznost.dataset.odpoved;
-    console.log(indexOdpovedi);
-
-    tvojeOdpovedi.push(indexOdpovedi);
-
-    console.log(tvojeOdpovedi);
+    let uspesnost = document.getElementById('uspesnost');
+    uspesnost.textContent = 'správně ' + spravne + ' ze ' + otazky.length + ' otázek. úspěšnost ' + procenta + ' %.';
 }
-
